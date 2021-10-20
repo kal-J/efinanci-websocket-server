@@ -19,18 +19,17 @@ const io = socketio(server, {
 });
 
 // Route to emit any information / efinanci requests
-app.get("/", (req, res) => {
-  res.send({ health: "Websockets server up and running" });
-});
 app.post("/emit", (req, res) => {
-  //console.log(JSON.stringify(req.body));
-  const { all_requests, new_request } = req.body;
+    //console.log(JSON.stringify(req.body));
+  const { all_requests, new_request, socket_id } = req.body;
   if (all_requests) {
-    io.emit("all_requests", { all_requests: all_requests });
+    //io.emit("all_requests", { all_requests: all_requests });
+    io.to(socket_id).emit("all_requests", { all_requests: all_requests });
   }
 
   if (new_request) {
-    io.emit("new_request", { new_request: new_request });
+    //io.emit("new_request", { new_request: new_request });
+    io.to(socket_id).emit("new_request", { new_request: new_request });
   }
 
   res.status(200).send({ status: true, success: true });
